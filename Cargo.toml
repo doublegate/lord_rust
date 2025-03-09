@@ -1,0 +1,17 @@
+[package]
+name = "lord_rust"
+version = "0.2.0"
+edition = "2021"
+description = "Rust Recreation of the Classic BBS Game - Legend of the Red Dragon (L.O.R.D.)"
+authors = ["DoubleGate <parobek@gmail.com>"]
+
+[dependencies]
+argon2 = "0.5"
+password-hash = "0.5.0"
+rand_core = "0.9.3"
+sqlx = { version = "0.8.3", features = ["postgres", "runtime-tokio-native-tls", "chrono", "any"] }
+tokio = { version = "1", features = ["full"] }
+chrono = { version = "0.4", features = ["serde"] }
+dotenvy = "0.15.7"
+rand = "0.9.0"
+colored = "3.0.0"
