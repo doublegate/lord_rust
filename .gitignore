@@ -10,6 +10,7 @@ Cargo.lock
 
 # MSVC Windows builds of rustc generate these, which store debugging information
 *.pdb
+*.exe
 
 # Environment variables file
 .env
@@ -30,6 +31,7 @@ Cargo.lock
 
 # Log files
 *.log
+OpenAI_LLM.txt
 
 # Build output
 /dist/

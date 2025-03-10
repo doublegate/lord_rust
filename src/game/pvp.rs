@@ -1,5 +1,4 @@
 //! Player vs Player combat: choosing an opponent and simulating a duel.
-
 use rand::Rng;
 use colored::Colorize;
 use crate::ui::ansi_art; // Import ANSI art
@@ -8,7 +7,7 @@ use crate::db;
 use sqlx::PgPool;
 
 pub async fn challenge_player(conn: &PgPool, player: &mut Player) {
-	println!("{}", ansi_art::DUEL_SCENE.replace("{player_name}", &player.name)
+    println!("{}", ansi_art::DUEL_SCENE.replace("{player_name}", &player.name)
                                        .replace("{opponent_name}", "Unknown Opponent"));
     // List potential opponents (alive players other than the current player)
     let opponents = match db::list_alive_players(conn, player.id).await {
@@ -47,9 +46,13 @@ pub async fn challenge_player(conn: &PgPool, player: &mut Player) {
     let target_info = &opponents[index - 1];
     // Load full target player data
     let mut target = match db::get_player_by_id(conn, target_info.id).await {
-        Some(p) => p,
-        None => {
+        Ok(Some(p)) => p,
+        Ok(None) => {
             println!("Could not find that player.");
+            return;
+        }
+        Err(e) => {
+            println!("Error retrieving player: {}", e);
             return;
         }
     };
@@ -85,7 +88,9 @@ pub async fn challenge_player(conn: &PgPool, player: &mut Player) {
             }
             // Log PvP victory
             let news = format!("{} defeated {} in a duel!", player.name, target.name);
-            db::log_event(conn, &news).await.ok();
+            if let Err(e) = db::log_event(conn, &news).await {
+                eprintln!("Failed to log event: {}", e);
+            }
             break;
         }
         // Opponent strikes back if still alive
@@ -104,15 +109,62 @@ pub async fn challenge_player(conn: &PgPool, player: &mut Player) {
             }
             // Log PvP loss
             let news = format!("{} was killed by {} in a duel!", player.name, target.name);
-            db::log_event(conn, &news).await.ok();
+            if let Err(e) = db::log_event(conn, &news).await {
+                eprintln!("Failed to log event: {}", e);
+            }
             break;
         }
         // Loop continues until one is defeated
     }
 
     // Update both players in the database after the duel
-    db::update_player(conn, player).await.ok();
-    db::update_player(conn, &target).await.ok();
+    if let Err(e) = (async {
+        let mut tx = conn.begin().await?;
+        sqlx::query(
+            r#"UPDATE players SET
+                level=$1, exp=$2, gold=$3, current_hp=$4, max_hp=$5,
+                attack=$6, defense=$7, forest_fights=$8, alive=$9,
+                romance=$10, spouse=$11, last_login=NOW()
+            WHERE id=$12"#
+        )
+        .bind(player.level)
+        .bind(player.exp)
+        .bind(player.gold)
+        .bind(player.current_hp)
+        .bind(player.max_hp)
+        .bind(player.attack)
+        .bind(player.defense)
+        .bind(player.forest_fights)
+        .bind(player.alive)
+        .bind(player.romance)
+        .bind(&player.spouse)
+        .bind(player.id)
+        .execute(&mut *tx).await?;
+        sqlx::query(
+            r#"UPDATE players SET
+                level=$1, exp=$2, gold=$3, current_hp=$4, max_hp=$5,
+                attack=$6, defense=$7, forest_fights=$8, alive=$9,
+                romance=$10, spouse=$11, last_login=NOW()
+            WHERE id=$12"#
+        )
+        .bind(target.level)
+        .bind(target.exp)
+        .bind(target.gold)
+        .bind(target.current_hp)
+        .bind(target.max_hp)
+        .bind(target.attack)
+        .bind(target.defense)
+        .bind(target.forest_fights)
+        .bind(target.alive)
+        .bind(target.romance)
+        .bind(&target.spouse)
+        .bind(target.id)
+        .execute(&mut *tx).await?;
+        tx.commit().await?;
+        Ok::<(), sqlx::Error>(())
+    }).await {
+        println!("Failed to save duel results: {}", e);
+    }
     if !player.alive {
         // If the current player died, they can't continue acting this day
         println!("You limp back to town as a spirit, awaiting tomorrow for another chance...");

@@ -5,11 +5,141 @@ All notable changes to the Legend of the Red Dragon (L.O.R.D.) Rust recreation w
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.2.0]
+## [0.3.0] - Legend of the Red Dragon (Rust Edition) - Version 0.3.0
 
-### Added - Overall
+## Changes and Features Since Last Version (v0.2.0 to v0.3.0)
 
-## Legend of the Red Dragon (Rust Edition) - Version 0.2.0
+## Overall Program Changes
+
+### 1. Database Migration from SQLite to PostgreSQL
+
+- **Technical Implementation:**
+  - Replaced `rusqlite` with `sqlx` for PostgreSQL support
+  - Implemented connection pooling for efficient database access
+  - Added type-safe SQL queries with compile-time verification
+  - Created migration system for database schema versioning
+  - Implemented transaction support for atomic operations
+
+### 2. Authentication System Enhancement
+
+- **Technical Implementation:**
+  - Integrated Argon2 password hashing algorithm for improved security
+  - Implemented password verification system
+  - Added username uniqueness enforcement at database level
+  - Created optional password authentication flow
+
+### 3. Asynchronous Runtime Integration
+
+- **Technical Implementation:**
+  - Added Tokio runtime for asynchronous database operations
+  - Implemented non-blocking I/O for improved performance
+  - Created async/await patterns throughout database layer
+  - Configured runtime with appropriate thread pool settings
+
+### 4. Environment Configuration System
+
+- **Technical Implementation:**
+  - Added `dotenvy` for environment variable management
+  - Created configurable database connection parameters
+  - Implemented environment-based configuration for development/production
+  - Added database health checks and connection validation
+
+## Game Features and Mechanics
+
+### 1. Enhanced Player Management System
+
+- **Technical Implementation:**
+  - Redesigned Player struct with comprehensive attributes
+  - Implemented persistent player state across game sessions
+  - Created daily reset mechanism for forest fights and player revival
+  - Added experience-based leveling system with automatic stat increases
+
+### 2. Improved Combat Systems
+
+- **Technical Implementation:**
+  - Enhanced random monster generation scaled to player level
+  - Refined turn-based combat system with attack/defense mechanics
+  - Created monster templates with varying difficulty levels
+  - Implemented experience and gold rewards based on monster strength
+  - Added death handling with news event logging
+
+### 3. Expanded PvP Combat
+
+- **Technical Implementation:**
+  - Developed challenge system to select opponents from active players
+  - Created turn-based duel mechanics similar to monster combat
+  - Implemented gold looting from defeated opponents (50% of their gold)
+  - Added experience rewards based on opponent level
+  - Created protection system preventing multiple defeats of the same player
+
+### 4. Enhanced Social and Role-Playing Elements
+
+- **Technical Implementation:**
+  - Developed progressive romance with Violet the barmaid
+  - Created five-stage romance progression with unique dialogue
+  - Implemented marriage system with public announcement
+  - Added spouse status tracking in player data
+  - Enhanced tavern interactions (flirting, drinking, gossip)
+
+### 5. Improved Game World and Interface
+
+- **Technical Implementation:**
+  - Refined central menu system with 7 main options
+  - Enhanced player status display with current stats
+  - Improved navigation to all game areas (forest, tavern, duels)
+  - Updated character information display
+  - Enhanced leaderboard system
+
+### 6. Advanced Data Persistence and Management
+
+- **Technical Implementation:**
+  - Integrated PostgreSQL database with SQLx
+  - Implemented connection pooling with configurable pool size
+  - Created environment variable configuration with dotenvy
+  - Enhanced daily reset mechanism for game state
+  - Added transaction support for atomic operations
+
+## Technical Architecture Improvements
+
+### 1. Database Layer Enhancements
+
+- **Technical Implementation:**
+  - Redesigned schema with comprehensive character attributes
+  - Created news table for event logging
+  - Added game state table for global settings
+  - Implemented repository pattern for data access
+  - Enhanced error handling with custom error types
+
+### 2. Game Logic Refinements
+
+- **Technical Implementation:**
+  - Improved core game structures and constants
+  - Enhanced level-up mechanics and experience calculations
+  - Refined monster generation and scaling
+  - Improved combat simulation and reward distribution
+  - Enhanced PvP opponent selection and duel simulation
+
+### 3. User Interface Improvements
+
+- **Technical Implementation:**
+  - Enhanced user input prompting
+  - Improved screen clearing and display
+  - Refined title display and ASCII art
+  - Added colored text using ANSI escape codes
+  - Created visual representations of game locations
+
+## Dependencies and Technologies Updates
+
+- **Updated Rust Crates:**
+  - Upgraded to `sqlx` v0.8.3 with PostgreSQL support
+  - Updated to `tokio` v1 with full feature set
+  - Added `argon2` v0.5 for password hashing
+  - Updated `rand` to v0.9.0
+  - Added `dotenvy` v0.15.7 for environment management
+  - Updated `colored` to v3.0.0
+  - Added `chrono` with serde features for date/time handling
+
+## [0.2.0] - Legend of the Red Dragon (Rust Edition) - Version 0.2.0
 
 ## Core Features
 

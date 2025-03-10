@@ -11,7 +11,7 @@ pub async fn main_menu(conn: &PgPool, player: &mut Player) {
 	println!("{}", ansi_art::TOWN_SQUARE);
     while player.alive {
         // Display player status summary at the top of each loop
-        println!("\n==================================================");
+        println!("\n======================================================");
         println!(
             "{} (Level {})  HP: {}/{}  Exp: {}/{}  Gold: {}",
             player.name,
@@ -31,7 +31,7 @@ pub async fn main_menu(conn: &PgPool, player: &mut Player) {
             };
             println!("Spouse: {}", spouse);
         }
-        println!("==================================================");
+        println!("==========================================================");
         // Display town menu options with some color for emphasis
         println!("{}", "1. Enter the Forest".green());
         println!("{}", "2. Visit the Tavern".magenta());

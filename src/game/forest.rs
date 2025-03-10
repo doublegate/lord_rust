@@ -1,5 +1,4 @@
 //! Forest exploration: encountering and fighting monsters.
-
 use rand::Rng;
 use colored::Colorize;
 use crate::ui::ansi_art; // Import ANSI art
@@ -32,7 +31,7 @@ fn generate_monster(player_level: i32) -> Monster {
     let (name, base_hp, base_attack) = MONSTER_TEMPLATES[rng.random_range(0..MONSTER_TEMPLATES.len())];
     // Scale monster stats with player level
     let level_factor = 1 + (player_level - 1) / 2;  // moderate scaling
-    let hp = base_hp * level_factor + rng.random_range(0..=5*player_level);
+    let hp = base_hp * level_factor + rng.random_range(0..=5 * player_level);
     let attack = base_attack * level_factor + rng.random_range(0..=player_level);
     // Determine rewards based on monster strength
     let exp_reward = hp / 2 + attack;
@@ -45,6 +44,7 @@ fn generate_monster(player_level: i32) -> Monster {
         gold_reward: gold_reward.max(1),
     }
 }
+
 /// Enter the forest and fight monsters until the player chooses to leave or runs out of fights/HP.
 pub async fn explore_forest(conn: &PgPool, player: &mut Player) {
     if player.forest_fights <= 0 {
@@ -52,7 +52,7 @@ pub async fn explore_forest(conn: &PgPool, player: &mut Player) {
         return;
     }
     println!("{}", ansi_art::FOREST_SCENE); // Show ANSI art before exploration starts
-	println!("You venture into the forest... ({} fights left today)", player.forest_fights);
+    println!("You venture into the forest... ({} fights left today)", player.forest_fights);
     let mut rng = rand::rng();
 
     // Loop for multiple fights
@@ -114,7 +114,7 @@ pub async fn explore_forest(conn: &PgPool, player: &mut Player) {
                 break;
             }
         } else {
-            println!("You have no more forest fights left today. You head back to town.");
+            println!("You've no more forest fights left today. You head back to town.");
         }
     }
 }
