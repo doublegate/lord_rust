@@ -6,11 +6,11 @@ description = "Rust Recreation of the Classic BBS Game - Legend of the Red Drago
 authors = ["DoubleGate <parobek@gmail.com>"]
 
 [dependencies]
-argon2 = "0.5"
+argon2 = "0.5.3"
 password-hash = "0.5.0"
-rand = "0.9.0"
-sqlx = { version = "0.8.3", features = ["postgres", "runtime-tokio-native-tls", "chrono", "any"] }
-tokio = { version = "1", features = ["full"] }
-chrono = { version = "0.4", features = ["serde"] }
+rand = "0.9.5"
+sqlx = { version = "0.8.6", features = ["postgres", "runtime-tokio-native-tls", "chrono", "any"] }
+tokio = { version = "1.52", features = ["full"] }
+chrono = { version = "0.4.44", features = ["serde"] }
 dotenvy = "0.15.7"
-colored = "3.0.0"
+colored = "3.1"
